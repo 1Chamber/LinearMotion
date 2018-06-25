@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body onload="defaultPos()">
+
+<!--<h1>First Project</h1> -->
+<link rel="stylesheet" href="style.css">
+<p>
+<button onclick="startMove()">Click Me to Start</button>
+<button onclick="stopMove()">Click Me to Stop</button>
+<button onclick="centerMove()">Click Me to reset</button>
+
+</p>
+<div id="animation"></div>
+
+<div id ="container" onclick="freezeArrow()">
+  <div id ="ball"></div>
+  <p id = "directionMessage"> Direction chosen. </br> Press start to launch. </p>
+</div>
+<div id = "arrow">
+<img src="images/arrow.png" width="150" height="100">
+</div>
+</body>
+
+<script src="ball.js"></script>
+
+</html>
