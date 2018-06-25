@@ -12,22 +12,24 @@ var ball = document.getElementById("ball");
 var arrow = document.getElementById("arrow");
 var directionMessage = document.getElementById("directionMessage");
 
-var xDirection = 'positive'; //true means ++ (positive)
-var yDirection = 'positive'; //true means ++ (positive)
+var inMotion = false;
+var isDefault = true;
+var directionChosen = false;
 
 var id;
-var inMotion = false;
+var speedInterval = 10; //default
 
-var directionChosen = false;
 
 
 
 function startMove() {
+  if(!inMotion) {
 
   //make arrow hidden and make ball visible
   arrow.style.visibility = "hidden";
   ball.style.visibility = "visible";
   directionMessage.style.visibility = "hidden";
+  isDefault = false;
 
   ball.style.left = xPos + 'px';
   ball.style.top = yPos + 'px';
@@ -37,9 +39,12 @@ function startMove() {
 
 
   if (inMotion === false) {
-    id = setInterval(frame, 10);
+    id = setInterval(frame, speedInterval);
     inMotion = true;
   }
+ }
+}
+
 
 
   function frame() {
@@ -74,21 +79,31 @@ function startMove() {
     addPos();
   }
 
+function speedUp() {
+  clearInterval(id)
+  speedInterval /= 2;
+  id = setInterval(frame, speedInterval)
+
 }
 
 function stopMove () {
   inMotion = false;
   clearInterval(id);
 }
+
 function centerMove () {
+   stopMove();
    xPos = 225; //middle of 500x500 box
    yPos = 225;
-  stopMove();
+
   //reseting all values
   ball.style.left = xPos + 'px';
   ball.style.top = yPos + 'px';
-  yDirection = 'positive';
-  xDirection = 'positive';
+  isDefault = true;
+  speedInterval = 10;
+
+  document.addEventListener('mousemove', updateCursorXY, false);
+  document.addEventListener('mouseenter', updateCursorXY, false);
 
   arrow.style.visibility = "visible";
   ball.style.visibility = "hidden";
@@ -99,22 +114,24 @@ function centerMove () {
 function defaultPos() {
   ball.style.left = xPos + 'px';
   ball.style.top = yPos + 'px';
+  document.addEventListener('mousemove', updateCursorXY, false);
+  document.addEventListener('mouseenter', updateCursorXY, false);
 }
 
 
 function freezeArrow() {
-  directionChosen = true;
-  directionMessage.style.visibility = "visible";
+  if(isDefault) {
+    directionChosen = true;
+    directionMessage.style.visibility = "visible";
+    document.removeEventListener('mousemove', updateCursorXY, false);
+    document.removeEventListener('mouseenter', updateCursorXY, false);
+  }
 }
-
-
-document.addEventListener('mousemove', updateCursorXY, false);
-document.addEventListener('mouseenter', updateCursorXY, false);
 
 function updateCursorXY(e) {
   if(directionChosen === false) {
-  cursorXPos = e.pageX - 200;
-  cursorYPos = e.pageY - 260;
+  cursorXPos = e.pageX - 200; //from center pos of arrow
+  cursorYPos = e.pageY - 260; //from center pos of arrow
   cursorDirectionAngle = calculateDirectionAngle();
   document.getElementById("arrow").style.transform = "rotate(" + cursorDirectionAngle + "deg)";
  }
